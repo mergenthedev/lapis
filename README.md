@@ -1,6 +1,6 @@
 # Lapis Game Engine
 
  > Simple Voxel Game Engine written in Go
-![Lapis Gopher, Lapis Gopher](lapis-gopher.png)
+<img src="lapis-gopher.png" alt="Lapis and Gopher" height="222"/>
 
  ---
