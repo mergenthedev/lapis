@@ -13,6 +13,9 @@ github.com/go-gl/glfw/v3.3/glfw
 github.com/pelletier/go-toml/v2
 ```
 
+also
+``Things you need when you make a OpenGL project.``
+
 ---
 
 > [!NOTE]
