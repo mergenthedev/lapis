@@ -14,7 +14,7 @@ github.com/pelletier/go-toml/v2
 ```
 
 also
-``Things you need when you make a OpenGL project.``
+`Things you need when you make a OpenGL project.`
 
 ---
 
