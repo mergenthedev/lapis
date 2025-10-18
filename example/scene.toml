@@ -1,0 +1,25 @@
+name = "scene"
+script = "script.lua"
+
+[obj1]
+type = "mesh"
+material = "0"
+shape = "cube"
+size = [1, 2, 1]
+pos = [0, 1, 0]
+
+[obj2]
+type = "light"
+shape = "spot"
+angle = 45
+energy = 2
+color = "#ff4800ff"
+pos = [5, 3, 5]
+rotation = [37, -45, 0]
+
+[obj3]
+type = "mesh"
+material = "1"
+shape = "plane"
+size = [5, 5]
+pos = [0, 0, 0]
