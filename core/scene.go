@@ -48,16 +48,7 @@ func LoadScene(scenePath string) Scene {
 
 // To-Do: Also ts just for test
 func RunScene(scene map[string]interface{}) {
-	for obj, prop := range scene {
-		switch value := prop.(type) {
-		case map[string]interface{}:
-			fmt.Println(obj)
-			fmt.Println(value)
-		case string:
-			fmt.Println(obj)
-			fmt.Println(value)
-		}
-	}
+	//TO-Do
 }
 
 // will optimize later
