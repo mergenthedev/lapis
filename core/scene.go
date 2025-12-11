@@ -12,20 +12,8 @@ import (
 type Scene struct {
 	Name    string
 	Script  string
-	Objects []Object
-	NumObj  int
-}
-
-type Object struct {
-	Type     string
-	Shape    string
-	Material string
-	Angle    int
-	Energy   int
-	Color    string
-	Size     Vec3
-	Pos      Vec3
-	Rotation Vec3
+	Objects map[string]any
+	Cameras map[string]any
 }
 
 // Refactor and optimize in future or rn
@@ -36,36 +24,22 @@ func LoadScene(scenePath string) Scene {
 		log.Fatal(PrefixErr + "Cannot read scene file: " + scenePath)
 	}
 
-	var sceneMap map[string]interface{}
+	var sceneMap map[string]any
 	toml.Unmarshal(sceneFile, &sceneMap)
 
-	var scene Scene
-	scene.NumObj = 0
+	scene := Scene{
+		Objects: make(map[string]any),
+		Cameras: make(map[string]any),
+	}
 
-	for obj, prop := range sceneMap {
-		switch value := prop.(type) {
-		case string:
-			switch obj {
-			case "name":
-				scene.Name = value
-			case "script":
-				scene.Script = value
+	for key, props := range sceneMap {
+		switch value := props.(type) {
+		case map[string]any:
+			if value["type"].(string) == "camera" {
+				scene.Cameras[key] = value
+			} else {
+				scene.Objects[key] = value
 			}
-		case map[string]interface{}:
-			objProps, ok := prop.(map[string]interface{})
-			if !ok {
-				fmt.Println(PrefixWarn)
-			}
-
-			scene.NumObj++
-
-			scene.Objects = append(scene.Objects, Object{})
-
-			scene.Objects[scene.NumObj-1].Type = objProps["type"].(string)
-			//scene.Objects[scene.NumObj-1].Shape = objProps["shape"].(string)
-
-		default:
-			fmt.Println(PrefixWarn)
 		}
 	}
 
@@ -86,43 +60,25 @@ func RunScene(scene map[string]interface{}) {
 	}
 }
 
-func Edit(scene map[string]interface{}, path string, value interface{}) {
+// will optimize later
+func Get(home map[string]any, who string) any {
 	defer func() {
 		if rec := recover(); rec != nil {
 			fmt.Println(PrefixWarn + "Probably the property doesn't exist.")
 		}
 	}()
 
-	prop := strings.Split(path, ".")
-	scene[prop[0]].(map[string]interface{})[prop[1]] = value
+	prop := strings.Split(who, ".")
+	return home[prop[0]].(map[string]any)[prop[1]]
 }
 
-func Get(scene map[string]interface{}, path string) interface{} {
-	prop := strings.Split(path, ".")
-	return scene[prop[0]].(map[string]interface{})[prop[1]]
-}
-
-// For testing purposes gotta remove later.
-/*func PrintMap(m map[string]interface{}) {
-	for key, value := range m {
-		switch v := value.(type) {
-		case map[string]interface{}:
-			fmt.Println(key + ":")
-			PrintMap(v)
-		case []interface{}:
-			fmt.Println(key+":", v)
-		default:
-			fmt.Println(key+":", v)
+func Edit(home map[string]any, who string, value any) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			fmt.Println(PrefixWarn + "Probably the property doesn't exist.")
 		}
-	}
-}*/
+	}()
 
-//Type:  objProps["type"].(string),
-//Shape: objProps["shape"].(string),
-//Material: objProps["material"].(string),
-//Angle:    objProps["angle"].(int),
-//Energy:   objProps["energy"].(int),
-//Color:    objProps["color"].(string),
-//Size:     ToVec3(objProps["size"].([]float64)),
-//Pos: ToVec3(objProps["pos"].([]float64)),
-//Rotation: ToVec3(objProps["rotation"].([]float64)),
+	prop := strings.Split(who, ".")
+	home[prop[0]].(map[string]any)[prop[1]] = value
+}
