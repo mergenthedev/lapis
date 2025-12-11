@@ -18,9 +18,17 @@ func main() {
 
 	var scene = core.LoadScene("scene.toml")
 
-	fmt.Println(core.Get(scene, "obj2.energy"))
-	core.Edit(scene, "obj2.energy", 5)
-	fmt.Println(core.Get(scene, "obj2.energy"))
+	willBeAVec3 := []float64{9, 1, 5}
+	thisToo := core.Vec2{X: 2, Y: 0}
+
+	fmt.Println(" ")
+
+	fmt.Println(core.ToVec3(willBeAVec3))
+	fmt.Println(core.ToVec3(thisToo))
+
+	fmt.Println(" ")
+
+	fmt.Println(scene.Cameras)
 
 	for !window.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT)
