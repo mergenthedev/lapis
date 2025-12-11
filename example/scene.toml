@@ -23,3 +23,10 @@ material = "1"
 shape = "plane"
 size = [5, 5]
 pos = [0, 0, 0]
+
+[cam]
+type = "camera"
+far = 1000
+near = 0.01
+rotation = [0, 0, 0]
+pos = [10, 2, 1]
