@@ -28,8 +28,11 @@ func main() {
 
 	fmt.Println(core.Get(scene.Cameras, "cam.near"))
 
+	shader := core.CreateCustomShader("vertex.glsl", "fragment.glsl")
+
 	for !window.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT)
+		core.Draw(scene.Objects, shader)
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
