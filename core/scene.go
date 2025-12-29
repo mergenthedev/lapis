@@ -13,7 +13,6 @@ type Scene struct {
 	Name    string
 	Script  string
 	Objects map[string]any
-	Cameras map[string]any
 }
 
 // Refactor and optimize in future or rn
@@ -29,16 +28,17 @@ func LoadScene(scenePath string) Scene {
 
 	scene := Scene{
 		Objects: make(map[string]any),
-		Cameras: make(map[string]any),
 	}
 
 	for key, props := range sceneMap {
 		switch value := props.(type) {
 		case map[string]any:
-			if value["type"].(string) == "camera" {
-				scene.Cameras[key] = value
-			} else {
-				scene.Objects[key] = value
+			scene.Objects[key] = value
+		case string:
+			if key == "name" {
+				scene.Name = value
+			} else if key == "script" {
+				scene.Script = value
 			}
 		}
 	}
@@ -46,13 +46,13 @@ func LoadScene(scenePath string) Scene {
 	return scene
 }
 
-// To-Do: Also ts just for test
+// To-Do
 func RunScene(scene map[string]interface{}) {
 	//TO-Do
 }
 
 // will optimize later
-func Get(home map[string]any, who string) any {
+func Get(scene Scene, who string) any {
 	defer func() {
 		if rec := recover(); rec != nil {
 			fmt.Println(PrefixWarn + "Probably the property doesn't exist.")
@@ -60,10 +60,10 @@ func Get(home map[string]any, who string) any {
 	}()
 
 	prop := strings.Split(who, ".")
-	return home[prop[0]].(map[string]any)[prop[1]]
+	return scene.Objects[prop[0]].(map[string]any)[prop[1]]
 }
 
-func Edit(home map[string]any, who string, value any) {
+func Edit(scene Scene, who string, value any) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			fmt.Println(PrefixWarn + "Probably the property doesn't exist.")
@@ -71,5 +71,5 @@ func Edit(home map[string]any, who string, value any) {
 	}()
 
 	prop := strings.Split(who, ".")
-	home[prop[0]].(map[string]any)[prop[1]] = value
+	scene.Objects[prop[0]].(map[string]any)[prop[1]] = value
 }
