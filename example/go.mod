@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/AllenDang/cimgui-go v1.4.0 // indirect
 	github.com/go-gl/mathgl v1.2.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 )
