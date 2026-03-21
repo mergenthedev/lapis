@@ -31,6 +31,7 @@ func Init(config Config) {
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 	glfw.WindowHint(glfw.AlphaBits, 8)
+	glfw.WindowHint(glfw.DepthBits, 24)
 
 	if err := gl.Init(); err != nil {
 		log.Fatal(PrefixErr + "Cannot init OpenGL!")
