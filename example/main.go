@@ -25,20 +25,20 @@ func main() {
 	fmt.Println(core.ToVec3(thisToo))
 	fmt.Println(core.Get(scene, "cam.near"))
 
-	texture := core.LoadImage("sjack.jpg", core.LINEAR)
+	texture := core.LoadImage("jackashi.jpg", core.LINEAR)
 
-	core.CreateCustomShader("vertex.glsl", "fragment.glsl")
+	//core.CreateCustomShader("vertex.glsl", "fragment.glsl")
+	core.DefaultShader()
+	gl.ClearColor(0, 0, 0, 0)
 
-	gl.ClearColor(0, 0, 0, 1)
-
-	core.CreateCamera()
+	core.CreateCamera(45, 0.1, 1000, core.Vec3{0, 0, 0})
 
 	fmt.Println(scene.Script)
 	fmt.Println(scene.Name)
 
 	for !window.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		core.Draw(scene.Objects, texture)
+		core.DrawCube(scene.Objects, texture)
 		//gl.UniformMatrix4fv(modelUniform, 1, false, &model[0])
 		window.SwapBuffers()
 
