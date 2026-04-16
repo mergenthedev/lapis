@@ -36,40 +36,40 @@ func genCubeMeshBuffers() {
 	GenBuffers.Do(func() {
 		var vertices = []float32{
 			// Front face (z = 0.5)
-			-0.5, -0.5, 0.5, 0.0, 0.0, // bottom-left
-			0.5, -0.5, 0.5, 1.0, 0.0, // bottom-right
-			0.5, 0.5, 0.5, 1.0, 1.0, // top-right
-			-0.5, 0.5, 0.5, 0.0, 1.0, // top-left
+			-0.5, -0.5, 0.5, 1.0, 1.0, // bottom-left
+			0.5, -0.5, 0.5, 0.0, 1.0, // bottom-right
+			0.5, 0.5, 0.5, 0.0, 0.0, // top-right
+			-0.5, 0.5, 0.5, 1.0, 0.0, // top-left
 
 			// Back face (z = -0.5)
-			0.5, -0.5, -0.5, 0.0, 0.0, // bottom-right (facing opposite)
-			-0.5, -0.5, -0.5, 1.0, 0.0, // bottom-left
-			-0.5, 0.5, -0.5, 1.0, 1.0, // top-left
-			0.5, 0.5, -0.5, 0.0, 1.0, // top-right
+			0.5, -0.5, -0.5, 1.0, 1.0, // bottom-right (facing opposite)
+			-0.5, -0.5, -0.5, 0.0, 1.0, // bottom-left
+			-0.5, 0.5, -0.5, 0.0, 0.0, // top-left
+			0.5, 0.5, -0.5, 1.0, 0.0, // top-right
 
 			// Top face (y = 0.5)
-			-0.5, 0.5, -0.5, 0.0, 0.0, // back-left
-			0.5, 0.5, -0.5, 1.0, 0.0, // back-right
-			0.5, 0.5, 0.5, 1.0, 1.0, // front-right
-			-0.5, 0.5, 0.5, 0.0, 1.0, // front-left
+			-0.5, 0.5, -0.5, 1.0, 1.0, // back-left
+			0.5, 0.5, -0.5, 0.0, 1.0, // back-right
+			0.5, 0.5, 0.5, 0.0, 0.0, // front-right
+			-0.5, 0.5, 0.5, 1.0, 0.0, // front-left
 
 			// Bottom face (y = -0.5)
-			-0.5, -0.5, 0.5, 0.0, 0.0, // front-left
-			0.5, -0.5, 0.5, 1.0, 0.0, // front-right
-			0.5, -0.5, -0.5, 1.0, 1.0, // back-right
-			-0.5, -0.5, -0.5, 0.0, 1.0, // back-left
+			-0.5, -0.5, 0.5, 1.0, 1.0, // front-left
+			0.5, -0.5, 0.5, 0.0, 1.0, // front-right
+			0.5, -0.5, -0.5, 0.0, 0.0, // back-right
+			-0.5, -0.5, -0.5, 1.0, 0.0, // back-left
 
 			// Right face (x = 0.5)
-			0.5, -0.5, -0.5, 0.0, 0.0, // back-bottom
-			0.5, 0.5, -0.5, 1.0, 0.0, // back-top
-			0.5, 0.5, 0.5, 1.0, 1.0, // front-top
-			0.5, -0.5, 0.5, 0.0, 1.0, // front-bottom
+			0.5, -0.5, -0.5, 1.0, 1.0, // back-bottom
+			0.5, 0.5, -0.5, 0.0, 1.0, // back-top
+			0.5, 0.5, 0.5, 0.0, 0.0, // front-top
+			0.5, -0.5, 0.5, 1.0, 0.0, // front-bottom
 
 			// Left face (x = -0.5)
-			-0.5, -0.5, 0.5, 0.0, 0.0, // front-bottom
-			-0.5, 0.5, 0.5, 1.0, 0.0, // front-top
-			-0.5, 0.5, -0.5, 1.0, 1.0, // back-top
-			-0.5, -0.5, -0.5, 0.0, 1.0, // back-bottom
+			-0.5, -0.5, 0.5, 1.0, 1.0, // front-bottom
+			-0.5, 0.5, 0.5, 0.0, 1.0, // front-top
+			-0.5, 0.5, -0.5, 0.0, 0.0, // back-top
+			-0.5, -0.5, -0.5, 1.0, 0.0, // back-bottom
 		}
 
 		var indices = []uint32{

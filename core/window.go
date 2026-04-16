@@ -14,9 +14,12 @@ type Window struct {
 	*glfw.Window
 }
 
+var DefaultWindow *glfw.Window
+
 func CreateWindow(width int32, height int32, title string, resizable int) *Window {
 	glfw.WindowHint(glfw.Resizable, resizable)
 	window, err := glfw.CreateWindow(int(width), int(height), title, nil, nil)
+	DefaultWindow = window
 
 	if err != nil {
 		log.Fatal(PrefixErr + "Can't create window!")
@@ -41,6 +44,8 @@ func CreateWindow(width int32, height int32, title string, resizable int) *Windo
 	gl.Enable(gl.BLEND)
 	gl.DepthFunc(gl.LESS)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+	defaultShader()
 
 	return &Window{window}
 }

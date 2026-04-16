@@ -27,8 +27,6 @@ func main() {
 
 	texture := core.LoadImage("jackashi.jpg", core.LINEAR)
 
-	//core.CreateCustomShader("vertex.glsl", "fragment.glsl")
-	core.DefaultShader()
 	gl.ClearColor(0, 0, 0, 0)
 
 	core.CreateCamera(45, 0.1, 1000, core.Vec3{0, 0, 0})
@@ -36,13 +34,14 @@ func main() {
 	fmt.Println(scene.Script)
 	fmt.Println(scene.Name)
 
+	core.InitGUI()
+
 	for !window.ShouldClose() {
+		glfw.PollEvents()
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		core.DrawCube(scene.Objects, texture)
-		//gl.UniformMatrix4fv(modelUniform, 1, false, &model[0])
 		window.SwapBuffers()
 
-		glfw.PollEvents()
 		core.GetFPS()
 	}
 

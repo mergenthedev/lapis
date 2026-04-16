@@ -37,12 +37,10 @@ func CreateCustomShader(vertexFile string, fragmentFile string) {
 
 	gl.DeleteShader(vertex)
 	gl.DeleteShader(fragment)
-
-	//DefaultShaderPr = program
 }
 
-// Private functions for render backend to call
-func DefaultShader() {
+// Loads default shader
+func defaultShader() {
 	vertex := gl.CreateShader(gl.VERTEX_SHADER)
 	vertexC, freeV := gl.Strs(defVertexSh)
 	gl.ShaderSource(vertex, 1, vertexC, nil)
@@ -66,8 +64,10 @@ func DefaultShader() {
 	DefaultShaderPr = program
 }
 
+//Private function for material manipulation in render runtime will make some of them public if they are useful for user
+
 var defVertexSh = `
-#version 460 core
+#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 
@@ -85,7 +85,7 @@ void main()
 ` + "\x00"
 
 var defFragmentSh = `
-#version 460 core
+#version 330 core
 out vec4 FragColor;
 in vec2 TexCoord;
 
