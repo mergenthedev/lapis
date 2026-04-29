@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/go-gl/gl/v4.6-core/gl"
+	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
 func LoadImage(path string, sampling uint32) uint32 {
