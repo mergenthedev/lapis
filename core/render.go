@@ -4,72 +4,76 @@ import (
 	"sync"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
+	"github.com/go-gl/glfw/v3.4/glfw"
 	"github.com/go-gl/mathgl/mgl32"
 )
 
 var GenBuffers sync.Once
 var vao, vbo, ebo uint32
+var model mgl32.Mat4
 
-func DrawCube(obj map[string]any, tex uint32) {
-	gl.UseProgram(DefaultShaderPr)
+func RenderLoop(window *Window, do func()) {
+	for !window.ShouldClose() {
+		glfw.PollEvents()
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		do()
+		window.SwapBuffers()
+	}
+}
 
+func DrawCube(obj map[string]any, tex uint32, deg float32, pos Vec3) {
 	genCubeMeshBuffers()
 
 	gl.ActiveTexture(gl.TEXTURE0)
 	gl.BindTexture(gl.TEXTURE_2D, tex)
 	gl.Uniform1i(gl.GetUniformLocation(DefaultShaderPr, gl.Str("Texture\x00")), 0)
 
-	model := mgl32.HomogRotate3D(mgl32.DegToRad(90), mgl32.Vec3{1, 0, 0})
-	modelLoc := gl.GetUniformLocation(DefaultShaderPr, gl.Str("model\x00"))
-	gl.UniformMatrix4fv(modelLoc, 1, false, &model[0])
+	model = mgl32.Translate3D(pos.X, pos.Y, pos.Z).Mul4(mgl32.HomogRotate3D(mgl32.DegToRad(deg), mgl32.Vec3{0, 1, 0}))
+	gl.UniformMatrix4fv(ModelLoc, 1, false, &model[0])
 
 	gl.BindVertexArray(vao)
 	gl.DrawElementsWithOffset(gl.TRIANGLES, 36, gl.UNSIGNED_INT, 0)
 	gl.BindVertexArray(0)
-
-	//gl.DeleteVertexArrays(1, &vao)
-	//gl.DeleteBuffers(1, &vbo)
-	//gl.DeleteBuffers(1, &ebo)
 }
 
 func genCubeMeshBuffers() {
 	GenBuffers.Do(func() {
 		var vertices = []float32{
-			// Front face (z = 0.5)
-			-0.5, -0.5, 0.5, 1.0, 1.0, // bottom-left
-			0.5, -0.5, 0.5, 0.0, 1.0, // bottom-right
-			0.5, 0.5, 0.5, 0.0, 0.0, // top-right
-			-0.5, 0.5, 0.5, 1.0, 0.0, // top-left
+			// front
+			-0.5, -0.5, 0.5, 0.0, 0.0,
+			0.5, -0.5, 0.5, 1.0, 0.0,
+			0.5, 0.5, 0.5, 1.0, 1.0,
+			-0.5, 0.5, 0.5, 0.0, 1.0,
 
 			// Back face (z = -0.5)
-			0.5, -0.5, -0.5, 1.0, 1.0, // bottom-right (facing opposite)
-			-0.5, -0.5, -0.5, 0.0, 1.0, // bottom-left
-			-0.5, 0.5, -0.5, 0.0, 0.0, // top-left
-			0.5, 0.5, -0.5, 1.0, 0.0, // top-right
+			0.5, -0.5, -0.5, 0.0, 0.0,
+			-0.5, -0.5, -0.5, 1.0, 0.0,
+			-0.5, 0.5, -0.5, 1.0, 1.0,
+			0.5, 0.5, -0.5, 0.0, 1.0,
 
 			// Top face (y = 0.5)
-			-0.5, 0.5, -0.5, 1.0, 1.0, // back-left
-			0.5, 0.5, -0.5, 0.0, 1.0, // back-right
-			0.5, 0.5, 0.5, 0.0, 0.0, // front-right
-			-0.5, 0.5, 0.5, 1.0, 0.0, // front-left
+			-0.5, 0.5, -0.5, 0.0, 0.0,
+			0.5, 0.5, -0.5, 1.0, 0.0,
+			0.5, 0.5, 0.5, 1.0, 1.0,
+			-0.5, 0.5, 0.5, 0.0, 1.0,
 
 			// Bottom face (y = -0.5)
-			-0.5, -0.5, 0.5, 1.0, 1.0, // front-left
-			0.5, -0.5, 0.5, 0.0, 1.0, // front-right
-			0.5, -0.5, -0.5, 0.0, 0.0, // back-right
-			-0.5, -0.5, -0.5, 1.0, 0.0, // back-left
+			-0.5, -0.5, 0.5, 0.0, 0.0,
+			0.5, -0.5, 0.5, 1.0, 0.0,
+			0.5, -0.5, -0.5, 1.0, 1.0,
+			-0.5, -0.5, -0.5, 0.0, 1.0,
 
 			// Right face (x = 0.5)
-			0.5, -0.5, -0.5, 1.0, 1.0, // back-bottom
-			0.5, 0.5, -0.5, 0.0, 1.0, // back-top
-			0.5, 0.5, 0.5, 0.0, 0.0, // front-top
-			0.5, -0.5, 0.5, 1.0, 0.0, // front-bottom
+			0.5, -0.5, -0.5, 1.0, 0.0,
+			0.5, 0.5, -0.5, 1.0, 1.0,
+			0.5, 0.5, 0.5, 0.0, 1.0,
+			0.5, -0.5, 0.5, 0.0, 0.0,
 
 			// Left face (x = -0.5)
-			-0.5, -0.5, 0.5, 1.0, 1.0, // front-bottom
-			-0.5, 0.5, 0.5, 0.0, 1.0, // front-top
-			-0.5, 0.5, -0.5, 0.0, 0.0, // back-top
-			-0.5, -0.5, -0.5, 1.0, 0.0, // back-bottom
+			-0.5, -0.5, 0.5, 1.0, 0.0,
+			-0.5, 0.5, 0.5, 1.0, 1.0,
+			-0.5, 0.5, -0.5, 0.0, 1.0,
+			-0.5, -0.5, -0.5, 0.0, 0.0,
 		}
 
 		var indices = []uint32{
@@ -97,5 +101,6 @@ func genCubeMeshBuffers() {
 
 		gl.VertexAttribPointerWithOffset(1, 2, gl.FLOAT, false, 5*4, 3*4)
 		gl.EnableVertexAttribArray(1)
+
 	})
 }

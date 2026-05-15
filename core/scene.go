@@ -48,7 +48,7 @@ func LoadScene(scenePath string) Scene {
 
 // To-Do
 func RunScene(scene map[string]interface{}) {
-	//TO-Do
+	//TO-DO
 }
 
 // will optimize later

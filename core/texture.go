@@ -42,6 +42,21 @@ func LoadImage(path string, sampling uint32) uint32 {
 
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{0, 0}, draw.Src)
 
+	bounds := rgba.Bounds()
+	height := bounds.Dy()
+	stride := rgba.Stride
+
+	tempRow := make([]uint8, stride)
+
+	for y := 0; y < height/2; y++ {
+		topOffset := y * stride
+		bottomOffset := (height - 1 - y) * stride
+
+		copy(tempRow, rgba.Pix[topOffset:topOffset+stride])
+		copy(rgba.Pix[topOffset:topOffset+stride], rgba.Pix[bottomOffset:bottomOffset+stride])
+		copy(rgba.Pix[bottomOffset:bottomOffset+stride], tempRow)
+	}
+
 	var texture uint32
 
 	gl.GenTextures(1, &texture)
@@ -57,4 +72,26 @@ func LoadImage(path string, sampling uint32) uint32 {
 	gl.GenerateMipmap(gl.TEXTURE_2D)
 
 	return texture
+}
+
+func flipV(rgba *image.RGBA) {
+	bounds := rgba.Bounds()
+	height := bounds.Dy()
+	stride := rgba.Stride // Her bir yatay satırın byte cinsinden uzunluğu
+
+	// Bir satırı geçici olarak tutmak için buffer oluştur
+	tempRow := make([]uint8, stride)
+
+	// Görselin yüksekliğinin yarısına kadar dönüp alt ve üst satırları yer değiştir
+	for y := 0; y < height/2; y++ {
+		topOffset := y * stride
+		bottomOffset := (height - 1 - y) * stride
+
+		// 1. Üst satırı geçici buffer'a kopyala
+		copy(tempRow, rgba.Pix[topOffset:topOffset+stride])
+		// 2. Alt satırı üst satırın yerine kopyala
+		copy(rgba.Pix[topOffset:topOffset+stride], rgba.Pix[bottomOffset:bottomOffset+stride])
+		// 3. Geçici buffer'daki (eski üst satır) veriyi alt satıra kopyala
+		copy(rgba.Pix[bottomOffset:bottomOffset+stride], tempRow)
+	}
 }

@@ -8,6 +8,7 @@ import (
 )
 
 var DefaultShaderPr uint32
+var ModelLoc int32
 
 func CreateCustomShader(vertexFile string, fragmentFile string) {
 	vertex := gl.CreateShader(gl.VERTEX_SHADER)
@@ -61,6 +62,7 @@ func defaultShader() {
 	gl.DeleteShader(vertex)
 	gl.DeleteShader(fragment)
 
+	gl.GetUniformLocation(DefaultShaderPr, gl.Str("model\x00"))
 	DefaultShaderPr = program
 }
 

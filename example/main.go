@@ -3,47 +3,42 @@ package main
 import (
 	"fmt"
 
-	"github.com/go-gl/gl/v4.6-core/gl"
-	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/mergenthedev/lapis/core"
 )
 
 func main() {
 	core.Init(core.Config{
-		Debug: false,
-		VSync: false,
+		Debug:        false,
+		VSync:        false,
+		MSAA_Enabled: true,
+		MSAA_Samples: 16,
 	})
 
 	var window *core.Window = core.CreateWindow(800, 800, "Lapis", core.FALSE)
 
 	var scene = core.LoadScene("scene.toml")
 
-	willBeAVec3 := []float64{9, 1, 5}
-	thisToo := core.Vec2{X: 2, Y: 0}
+	fmt.Println(scene.Objects)
 
-	fmt.Println(core.ToVec3(willBeAVec3))
-	fmt.Println(core.ToVec3(thisToo))
-	fmt.Println(core.Get(scene, "cam.near"))
+	texture := core.LoadImage("mm.jpg", core.LINEAR)
+	texture2 := core.LoadImage("jackashi.jpg", core.LINEAR)
+	texture3 := core.LoadImage("stella.png", core.LINEAR)
 
-	texture := core.LoadImage("jackashi.jpg", core.LINEAR)
+	cam := core.CreateCamera(90, 0.1, 1000, core.Vec3{X: 0, Y: 0, Z: 2})
 
-	gl.ClearColor(0, 0, 0, 0)
+	var deg float32 = 0
 
-	core.CreateCamera(45, 0.1, 1000, core.Vec3{0, 0, 0})
-
-	fmt.Println(scene.Script)
-	fmt.Println(scene.Name)
-
-	core.InitGUI()
-
-	for !window.ShouldClose() {
-		glfw.PollEvents()
-		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		core.DrawCube(scene.Objects, texture)
-		window.SwapBuffers()
-
-		core.GetFPS()
-	}
+	core.RenderLoop(window, func() {
+		deg -= 0.005
+		//cam.Pos.Y += 0.0001
+		core.DrawCube(scene.Objects, texture, deg, core.Vec3{X: 1, Y: 1, Z: -0.5})
+		core.DrawCube(scene.Objects, texture, deg, core.Vec3{X: -3, Y: 1.7, Z: -3})
+		core.DrawCube(scene.Objects, texture2, deg, core.Vec3{X: -2, Y: 0, Z: -1.5})
+		core.DrawCube(scene.Objects, texture2, deg, core.Vec3{X: -1.8, Y: -1.6, Z: -2})
+		core.DrawCube(scene.Objects, texture3, deg, core.Vec3{X: .3, Y: -0.8, Z: 0})
+		core.DrawCube(scene.Objects, texture3, deg, core.Vec3{X: -0.7, Y: 0.8, Z: -2.3})
+		cam.UpdateCamera()
+	})
 
 	core.End()
 }

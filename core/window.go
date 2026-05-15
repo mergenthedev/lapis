@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"time"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.4/glfw"
@@ -27,8 +26,6 @@ func CreateWindow(width int32, height int32, title string, resizable int) *Windo
 
 	window.MakeContextCurrent()
 
-	glfw.SwapInterval(0)
-
 	var GLVersionMajor, GLVersionMinor int32
 	gl.GetIntegerv(gl.MAJOR_VERSION, &GLVersionMajor)
 	gl.GetIntegerv(gl.MINOR_VERSION, &GLVersionMinor)
@@ -40,28 +37,29 @@ func CreateWindow(width int32, height int32, title string, resizable int) *Windo
 
 	gl.Viewport(0, 0, width, height)
 
+	switch Engine.VSync {
+	case true:
+		glfw.SwapInterval(1)
+	case false:
+		glfw.SwapInterval(0)
+	}
+
+	switch Engine.MSAA_Enabled {
+	case true:
+		gl.Enable(gl.MULTISAMPLE)
+	case false:
+		gl.Disable(gl.MULTISAMPLE)
+	}
+
 	gl.Enable(gl.DEPTH_TEST)
 	gl.Enable(gl.BLEND)
 	gl.DepthFunc(gl.LESS)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
+	gl.ClearColor(0.0, 0.0, 0.0, 0.0)
+
 	defaultShader()
+	gl.UseProgram(DefaultShaderPr)
 
 	return &Window{window}
-}
-
-var frame uint32 = 0
-var lastCheckTime time.Time = time.Now()
-
-func GetFPS() {
-	frame++
-
-	currentTime := time.Now()
-	elapsed := currentTime.Sub(lastCheckTime).Seconds()
-
-	if elapsed >= 1.0 {
-		fmt.Printf("FPS: %d\n", frame)
-		frame = 0
-		lastCheckTime = currentTime
-	}
 }
